@@ -5,6 +5,8 @@ export TERM="xterm-256color"
 export CLICOLOR=1
 export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
 
+setopt share_history
+
 # prompt
 autoload -U colors && colors
 PROMPT="%{$fg_bold[blue]%}›%{$reset_color%}%{$fg_bold[red]%}›%{$reset_color%}%{$fg_bold[green]%}›%{$reset_color%} "
