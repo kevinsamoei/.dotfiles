@@ -1,123 +1,136 @@
-syntax enable
-set mouse=
-set backspace=indent,eol,start
-set background=dark
-set tabstop=2
-set shiftwidth=2
-set expandtab
-set ai
-set number
-set hlsearch
-set ruler
-set encoding=utf-8
+set nocompatible
+filetype off
+filetype plugin indent on
+
+set ttyfast
+
+set laststatus=2
+set statusline=
+set statusline +=%4*\ %<%f%*            "full path
+set statusline +=%1*%=%5l%*             "current line
+set statusline +=%2*/%L%*               "total lines
+
+set encoding=utf-8              " Set default encoding to UTF-8
+set autoread                    " Automatically reread changed files without asking me anything
 set autoindent
-set noerrorbells
-set termguicolors
-set t_Co=256
+set backspace=indent,eol,start  " Makes backspace key more powerful.
+set incsearch                   " Shows the match while typing
+set hlsearch                    " Highlight found searches
+set mouse=                       "disable mouse mode
+
+set noerrorbells             " No beeps
+set number                   " Show line numbers
+set showcmd                  " Show me what I'm typing
+set noswapfile               " Don't use swapfile
+set nobackup                 " Don't create annoying backup files
+set splitright               " Split vertical windows right to the current windows
+set splitbelow               " Split horizontal windows below to the current windows
+set autowrite                " Automatically save before :next, :make etc.
+set hidden
+set ignorecase               " Search case insensitive...
+set smartcase                " ... but not it begins with upper case
+set nocursorcolumn           " speed up syntax highlighting
+set nocursorline
+set updatetime=300
+set cmdheight=2
+set pumheight=10             " Completion window max size
+set conceallevel=2           " Concealed text is completely hidden
+" set colorcolumn=120
+
+
+set shortmess+=c   " Shut off completion messages
+set belloff+=ctrlg " If Vim beeps during completion
+
+set lazyredraw
+
+"http://stackoverflow.com/questions/20186975/vim-mac-how-to-copy-to-clipboard-without-pbcopy
+" set clipboard^=unnamed
+" set clipboard^=unnamedplus
+
+" increase max memory to show syntax highlighting for large files
+set maxmempattern=20000
+
+" ~/.viminfo needs to be writable and readable. Set oldfiles to 1000 last
+" recently opened files, :FzfHistory uses it
+set viminfo='1000
+
 let mapleader = ","
-highlight Comment ctermfg=green
 
-" remove arrow keys
-noremap <Up> <NOP>
-noremap <Down> <NOP>
-noremap <Left> <NOP>
-noremap <Right> <NOP>
-
-" Remove newbie crutches in Command Mode
-cnoremap <Down> <Nop>
-cnoremap <Left> <Nop>
-cnoremap <Right> <Nop>
-cnoremap <Up> <Nop>
-
-" Remove newbie crutches in Insert Mode
-inoremap <Down> <Nop>
-inoremap <Left> <Nop>
-inoremap <Right> <Nop>
-inoremap <Up> <Nop>
-
-" Remove newbie crutches in Insert Mode
-inoremap <Down> <Nop>
-inoremap <Left> <Nop>
-inoremap <Right> <Nop>
-inoremap <Up> <Nop>
-
-" Remove newbie crutches in Visual Mode
-vnoremap <Down> <Nop>
-vnoremap <Left> <Nop>
-vnoremap <Right> <Nop>
-vnoremap <Up> <Nop>
 
 " PLUGINS
 call plug#begin('~/.vim/plugged')
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'crusoexia/vim-monokai'
 Plug 'fatih/molokai'
-Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'tpope/vim-fugitive'
-Plug 'airblade/vim-gitgutter'
-" Plug 'jiangmiao/auto-pairs'
-Plug 'AndrewRadev/splitjoin.vim'
-Plug 'vim-airline/vim-airline'
-Plug 'morhetz/gruvbox'
-" Plug 'vim-airline/vim-airline-themes'
+Plug 'gruvbox-community/gruvbox'
+Plug 'vim-ruby/vim-ruby'
+Plug 'tpope/vim-rails'
+Plug 'sunaku/vim-ruby-minitest'
 call plug#end()
 
 " colorscheme
-let g:rehash256 = 1
-let g:molokai_original = 1
-colorscheme molokai
+syntax enable
 
-" gruvbox
+" set signcolumn=yes
+highlight SignColumn ctermbg=NONE cterm=NONE guibg=NONE gui=NONE
+highlight clear SignColumn
+highlight Pmenu ctermbg=240 ctermfg=7
+
+set termguicolors
+set background=dark
 let g:gruvbox_contrast_dark = "hard"
-" Airline
-let g:airline_theme='dark'
-let g:airline_section_z = "%3p%% %l:%c"
-" let g:airline#extensions#coc#enabled = 1
-" let g:airline_inactive_collapse=1
-let g:airline_section_y = "%h%m%r%w"
+let g:gruvbox_sign_column = "dark0_hard"
+colorscheme molokai
 
 " fzf
 nnoremap <silent> <C-p> :FZF<CR>
+let g:fzf_layout = { 'down': '~20%' }
 
 " vim-go
-let g:go_fmt_command = "goimports"
+
+let g:go_fmt_fail_silently = 1
+let g:go_debug_windows = {
+      \ 'vars':  'leftabove 35vnew',
+      \ 'stack': 'botright 10new',
+\ }
+
+let g:go_test_show_name = 1
+let g:go_list_type = "quickfix"
+
+let g:go_autodetect_gopath = 1
+let g:go_metalinter_autosave_enabled = ['vet', 'golint']
+let g:go_metalinter_enabled = ['vet', 'golint']
+
+let g:go_gopls_complete_unimported = 1
+
+" 2 is for errors and warnings
+let g:go_diagnostics_level = 2
+let g:go_doc_popup_window = 1
+
+let g:go_imports_mode="gopls"
+let g:go_imports_autosave=1
+
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_operators = 1
+" let g:go_fmt_command = "goimports"
 let g:go_highlight_functions = 1
 let g:go_highlight_function_calls = 1
-autocmd FileType go nmap <Leader>i <Plug>(go-info)
-" disable vim-go :GoDef short cut (gd)
-" this is handled by LanguageClient [LC]
 let g:go_def_mapping_enabled = 0
-" let g:go_highlight_types = 1
-" highlight goComment ctermfg=green
-" let g:go_highlight_fields = 1
-" let g:go_auto_sameids = 1
-let g:go_test_timeout = '30s'
 
-"------------------------------"
-"----------------coc.nvim------"
 
-set hidden
-set nobackup
-set nowritebackup
-set cmdheight=2
-set updatetime=300
-set shortmess+=c
-" set signcolumn=number
 
-highlight CocErrorFloat ctermfg=red ctermbg=240
-highlight Pmenu ctermbg=240 ctermfg=7
-highlight GitGutterAdd    guifg=#009900 ctermfg=2
-highlight GitGutterChange guifg=#bbbb00 ctermfg=3
-highlight GitGutterDelete guifg=#ff2222 ctermfg=1
-" highlight Search ctermbg=green ctermfg=black
-highlight clear SignColumn
+let g:go_fold_enable = []
+
+autocmd FileType go nmap <Leader>i <Plug>(go-info)
+
+" COC
+let g:coc_global_extensions = ['coc-solargraph']
+
+inoremap <silent><expr> <c-@> coc#refresh()	" Use <c-space> to trigger completion.
 
 " Use tab for trigger completion with characters ahead and navigate.
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
