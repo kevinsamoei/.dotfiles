@@ -1,0 +1,157 @@
+set nocompatible
+filetype off
+filetype plugin indent on
+
+set ttyfast
+
+set laststatus=2
+set statusline=
+set statusline +=%4*\ %<%f%*            "full path
+set statusline +=%1*%=%5l%*             "current line
+set statusline +=%2*/%L%*               "total lines
+
+set encoding=utf-8              " Set default encoding to UTF-8
+set autoread                    " Automatically reread changed files without asking me anything
+set autoindent
+set backspace=indent,eol,start  " Makes backspace key more powerful.
+set incsearch                   " Shows the match while typing
+set hlsearch                    " Highlight found searches
+set mouse=                       "disable mouse mode
+
+set noerrorbells             " No beeps
+set number                   " Show line numbers
+set showcmd                  " Show me what I'm typing
+set noswapfile               " Don't use swapfile
+set nobackup                 " Don't create annoying backup files
+set splitright               " Split vertical windows right to the current windows
+set splitbelow               " Split horizontal windows below to the current windows
+set autowrite                " Automatically save before :next, :make etc.
+set hidden
+set ignorecase               " Search case insensitive...
+set smartcase                " ... but not it begins with upper case
+set nocursorcolumn           " speed up syntax highlighting
+set nocursorline
+set updatetime=300
+set cmdheight=2
+set pumheight=10             " Completion window max size
+set conceallevel=2           " Concealed text is completely hidden
+" set colorcolumn=120
+
+set shortmess+=c   " Shut off completion messages
+set belloff+=ctrlg " If Vim beeps during completion
+
+set lazyredraw
+
+"http://stackoverflow.com/questions/20186975/vim-mac-how-to-copy-to-clipboard-without-pbcopy
+" set clipboard^=unnamed
+" set clipboard^=unnamedplus
+
+" increase max memory to show syntax highlighting for large files
+set maxmempattern=20000
+
+" ~/.viminfo needs to be writable and readable. Set oldfiles to 1000 last
+" recently opened files, :FzfHistory uses it
+set viminfo='1000
+" set list
+" set listchars=tab:>-
+
+let mapleader = ","
+
+
+" PLUGINS
+call plug#begin('~/.vim/plugged')
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'fatih/molokai'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'gruvbox-community/gruvbox'
+Plug 'vim-ruby/vim-ruby'
+Plug 'tpope/vim-rails'
+Plug 'sunaku/vim-ruby-minitest'
+" Plug 'github/copilot.vim'
+Plug 'junegunn/goyo.vim'
+call plug#end()
+
+" colorscheme
+syntax enable
+
+" set signcolumn=yes
+highlight SignColumn ctermbg=NONE cterm=NONE guibg=NONE gui=NONE
+highlight clear SignColumn
+highlight Pmenu ctermbg=240 ctermfg=7
+
+set termguicolors
+set background=dark
+let g:gruvbox_contrast_dark = "hard"
+let g:gruvbox_sign_column = "dark0_hard"
+colorscheme molokai
+
+" fzf
+nnoremap <silent> <C-p> :GFiles<CR>
+let g:fzf_layout = { 'down': '~20%' }
+
+" vim-go
+
+let g:go_fmt_fail_silently = 1
+let g:go_debug_windows = {
+      \ 'vars':  'leftabove 35vnew',
+      \ 'stack': 'botright 10new',
+\ }
+
+let g:go_test_show_name = 1
+let g:go_list_type = "quickfix"
+
+let g:go_autodetect_gopath = 1
+let g:go_metalinter_autosave_enabled = ['vet', 'golint']
+let g:go_metalinter_enabled = ['vet', 'golint']
+
+let g:go_gopls_complete_unimported = 1
+
+" 2 is for errors and warnings
+let g:go_diagnostics_level = 2
+let g:go_doc_popup_window = 1
+
+let g:go_imports_mode="gopls"
+let g:go_imports_autosave=1
+
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_operators = 1
+" let g:go_fmt_command = "goimports"
+let g:go_highlight_functions = 1
+let g:go_highlight_function_calls = 1
+let g:go_def_mapping_enabled = 0
+
+
+
+let g:go_fold_enable = []
+
+autocmd FileType go nmap <Leader>i <Plug>(go-info)
+
+" COC
+let g:coc_global_extensions = ['coc-solargraph', 'coc-tsserver']
+
+inoremap <silent><expr> <c-@> coc#refresh()	" Use <c-space> to trigger completion.
+
+" Use tab for trigger completion with characters ahead and navigate.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+
