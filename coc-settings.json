@@ -1,0 +1,66 @@
+{
+	"codeLens.enable": true,
+	"solargraph.useBundler": true,
+	"solargraph.diagnostics": true,
+	"solargraph.autoformat": true,
+	"solargraph.formatting": true,
+	"solargraph.completion": true,
+	"[javascript]": {
+		"coc.preferences.formatOnSave": false
+	},
+	"[typescript]": {
+		"coc.preferences.formatOnSave": true
+	},
+	"[typescriptreact]": {
+		"coc.preferences.formatOnSave": true
+	},
+	"[javascriptreact]": {
+		"coc.preferences.formatOnSave": true
+	},
+	"[json]": {
+		"coc.preferences.formatOnSave": false
+	},
+	"[markdown]": {
+		"coc.preferences.formatOnSave": false
+	},
+	"[yaml]": {
+		"coc.preferences.formatOnSave": true
+	},
+	"[html]": {
+		"coc.preferences.formatOnSave": true
+	},
+	"[css]": {
+		"coc.preferences.formatOnSave": true
+	},
+	"[python]": {
+		"coc.preferences.formatOnSave": true
+	},
+	"[go]": {
+		"coc.preferences.formatOnSave": true
+	},
+	"[ruby]": {
+		"coc.preferences.formatOnSave": true
+	},
+	"[prisma]": {
+		"coc.preferences.formatOnSave": true
+	},
+  "[sql]": {
+    "coc.preferences.formatOnSave": true
+  },
+  "sql.lintOnSave": true,
+	"python.formatting.provider": "black",
+	"python.formatting.blackPath": "/opt/homebrew/bin/black",
+	"python.linting.pylintEnabled": false,
+	"languageserver": {
+		"go": {
+			"command": "gopls",
+			"rootPatterns": [
+				"go.mod"
+			],
+			"trace.server": "verbose",
+			"filetypes": [
+				"go"
+			]
+		}
+	}
+}
