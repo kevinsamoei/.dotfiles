@@ -13,6 +13,9 @@ set statusline +=%2*/%L%*               "total lines
 set encoding=utf-8              " Set default encoding to UTF-8
 set autoread                    " Automatically reread changed files without asking me anything
 set autoindent
+set tabstop=2                   " Set tab size to 2 spaces
+set shiftwidth=2                " Set indent size to 2 spaces
+set expandtab                   " Use spaces instead of tabs
 set backspace=indent,eol,start  " Makes backspace key more powerful.
 set incsearch                   " Shows the match while typing
 set hlsearch                    " Highlight found searches
@@ -37,7 +40,6 @@ set pumheight=10             " Completion window max size
 set conceallevel=2           " Concealed text is completely hidden
 " set colorcolumn=120
 
-
 set shortmess+=c   " Shut off completion messages
 set belloff+=ctrlg " If Vim beeps during completion
 
@@ -53,6 +55,8 @@ set maxmempattern=20000
 " ~/.viminfo needs to be writable and readable. Set oldfiles to 1000 last
 " recently opened files, :FzfHistory uses it
 set viminfo='1000
+" set list
+" set listchars=tab:>-
 
 let mapleader = ","
 
@@ -68,10 +72,15 @@ Plug 'gruvbox-community/gruvbox'
 Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-rails'
 Plug 'sunaku/vim-ruby-minitest'
+Plug 'github/copilot.vim'
+Plug 'junegunn/goyo.vim'
+Plug 'prisma/vim-prisma'
+Plug 'junegunn/seoul256.vim'
 call plug#end()
 
 " colorscheme
 syntax enable
+set re=0
 
 " set signcolumn=yes
 highlight SignColumn ctermbg=NONE cterm=NONE guibg=NONE gui=NONE
@@ -79,13 +88,17 @@ highlight clear SignColumn
 highlight Pmenu ctermbg=240 ctermfg=7
 
 set termguicolors
-set background=dark
 let g:gruvbox_contrast_dark = "hard"
 let g:gruvbox_sign_column = "dark0_hard"
-colorscheme molokai
+
+let g:seoul256_background = 236
+let g:seoul256_srgb = 1
+colorscheme seoul256
+set background=dark
 
 " fzf
-nnoremap <silent> <C-p> :FZF<CR>
+nnoremap <silent> <C-p> :GFiles --cached --others --exclude-standard<CR>
+" nnoremap <silent> <C-p> :FZF<CR>
 let g:fzf_layout = { 'down': '~20%' }
 
 " vim-go
@@ -126,7 +139,7 @@ let g:go_fold_enable = []
 autocmd FileType go nmap <Leader>i <Plug>(go-info)
 
 " COC
-let g:coc_global_extensions = ['coc-solargraph']
+let g:coc_global_extensions = ['coc-solargraph', 'coc-tsserver', 'coc-pyright']
 
 inoremap <silent><expr> <c-@> coc#refresh()	" Use <c-space> to trigger completion.
 
