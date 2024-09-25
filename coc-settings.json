@@ -1,12 +1,7 @@
 {
 	"codeLens.enable": true,
-	"solargraph.useBundler": true,
-	"solargraph.diagnostics": true,
-	"solargraph.autoformat": true,
-	"solargraph.formatting": true,
-	"solargraph.completion": true,
 	"[javascript]": {
-		"coc.preferences.formatOnSave": false
+		"coc.preferences.formatOnSave": true
 	},
 	"[typescript]": {
 		"coc.preferences.formatOnSave": true
@@ -23,8 +18,11 @@
 	"[markdown]": {
 		"coc.preferences.formatOnSave": false
 	},
+	"[mdx]": {
+		"coc.preferences.formatOnSave": false
+	},
 	"[yaml]": {
-		"coc.preferences.formatOnSave": true
+		"coc.preferences.formatOnSave": false
 	},
 	"[html]": {
 		"coc.preferences.formatOnSave": true
@@ -33,7 +31,8 @@
 		"coc.preferences.formatOnSave": true
 	},
 	"[python]": {
-		"coc.preferences.formatOnSave": true
+		"coc.preferences.formatOnSave": true,
+    "inlayHint.enable": false
 	},
 	"[go]": {
 		"coc.preferences.formatOnSave": true
@@ -45,12 +44,25 @@
 		"coc.preferences.formatOnSave": true
 	},
   "[sql]": {
-    "coc.preferences.formatOnSave": true
+    "coc.preferences.formatOnSave": false
   },
+  "[cpp]": {
+    "coc.preferences.formatOnSave": true,
+    "codeLens.enable": false
+  },
+  "html.format.templating": true,
+  "html.filetypes": [
+    "html",
+    "handlebars",
+    "htmldjango",
+    "blade",
+    "erb"
+  ],
   "sql.lintOnSave": true,
 	"python.formatting.provider": "black",
 	"python.formatting.blackPath": "/opt/homebrew/bin/black",
 	"python.linting.pylintEnabled": false,
+  "pyright.inlayHints.functionReturnTypes": true,
 	"languageserver": {
 		"go": {
 			"command": "gopls",
@@ -61,6 +73,33 @@
 			"filetypes": [
 				"go"
 			]
-		}
-	}
+		},
+    "ccls": {
+      "command": "ccls",
+      "filetypes": ["c", "cc", "cpp", "c++", "objc", "objcpp"],
+      "rootPatterns": [".ccls", "compile_commands.json", ".git/", ".hg/"],
+      "initializationOptions": {
+        "cache": {
+          "directory": "/tmp/ccls"
+        }
+      }
+    },
+    "sorbet": {
+	    "command": "srb",
+	    "args": ["tc", "--typed", "true", "--enable-all-experimental-lsp-features", "--lsp", "--disable-watchman", "--suppress-error-code", "7003", "--typed-override", "sorbet/typed_overrides.yml"],
+	    "filetypes": ["ruby"],
+	    "rootPatterns": ["sorbet/config"],
+	    "initializationOptions": {},
+	    "settings": {}
+    },
+
+    "protobuf": {
+      "command": "buf",
+      "args": ["ls-files", "--output", "json"],
+      "filetypes": ["proto"],
+      "rootPatterns": ["buf.yaml"],
+      "initializationOptions": {},
+      "settings": {}
+    }
+  }
 }
