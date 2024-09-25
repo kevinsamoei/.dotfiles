@@ -1,5 +1,5 @@
 set nocompatible
-filetype off
+" filetype off
 filetype plugin indent on
 
 set ttyfast
@@ -60,6 +60,8 @@ set viminfo='1000
 
 let mapleader = ","
 
+command! -nargs=* W w
+
 
 " PLUGINS
 call plug#begin('~/.vim/plugged')
@@ -76,6 +78,9 @@ Plug 'github/copilot.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'prisma/vim-prisma'
 Plug 'junegunn/seoul256.vim'
+Plug 'wakatime/vim-wakatime'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-commentary'
 call plug#end()
 
 " colorscheme
@@ -98,6 +103,7 @@ set background=dark
 
 " fzf
 nnoremap <silent> <C-p> :GFiles --cached --others --exclude-standard<CR>
+nnoremap <silent> <C-z> :FZF<CR>
 " nnoremap <silent> <C-p> :FZF<CR>
 let g:fzf_layout = { 'down': '~20%' }
 
@@ -131,15 +137,16 @@ let g:go_highlight_operators = 1
 let g:go_highlight_functions = 1
 let g:go_highlight_function_calls = 1
 let g:go_def_mapping_enabled = 0
-
-
-
 let g:go_fold_enable = []
 
 autocmd FileType go nmap <Leader>i <Plug>(go-info)
 
+" copilot
+" disable by default
+let g:copilot_enabled = v:false
+
 " COC
-let g:coc_global_extensions = ['coc-solargraph', 'coc-tsserver', 'coc-pyright']
+let g:coc_global_extensions = ['coc-tsserver', 'coc-pyright', 'coc-diagnostic']
 
 inoremap <silent><expr> <c-@> coc#refresh()	" Use <c-space> to trigger completion.
 
@@ -163,4 +170,16 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+nmap <silent> gv :vsp<cr><Plug>(coc-definition)
 
+" Quicker window movement
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-h> <C-w>h
+nnoremap <C-l> <C-w>l
+
+" map rails commands
+autocmd User Rails nmap <buffer> <Leader>f :vert sfind <Plug><cfile><CR>
+" map alternate file command :A to open in vertical split
+nmap <Leader>a :vsp<cr>:A<CR>
+nmap <Leader>r :vsp<cr>:R<CR>
