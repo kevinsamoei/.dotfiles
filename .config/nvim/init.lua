@@ -570,65 +570,130 @@ if vim.fn.has("nvim") == 1 then
     {
       "williamboman/mason-lspconfig.nvim",
       config = function()
-        require("mason").setup()
-        require("mason-lspconfig").setup()
-        require("mason-lspconfig").setup_handlers({
-          -- The first entry (without a key) will be the default handler
-          -- and will be called for each installed server that doesn't have
-          -- a dedicated handler.
-          function(server_name) -- default handler (optional)
-            -- Basically just https://github.com/neovim/nvim-lspconfig
-            require("lspconfig")[server_name].setup({
-              on_attach = Simon_on_attach,
-              capabilities = vim.g.lsp_capabilities,
-              settings = server_name == "lua_ls" and {
-                Lua = {
-                  diagnostics = {
-                    globals = { "vim" },
-                  },
-                  runtime = {
-                    version = "LuaJIT",
-                  },
-                },
-              } or {},
-            })
-          end,
+        require("mason").setup({
+          ui = {
+            icons = {
+              package_installed = "✓",
+              package_pending = "➜",
+              package_uninstalled = "✗"
+            }
+          }
+        })
 
-          ["sorbet"] = function()
-            require("lspconfig").sorbet.setup({
-              on_attach = Simon_on_attach,
-              capabilities = vim.g.lsp_capabilities,
-              cmd = {
-                "srb",
-                "tc",
-                "--typed",
-                "true",
-                "--enable-all-experimental-lsp-features",
-                "--lsp",
-                "--disable-watchman",
-                "--suppress-error-code",
-                "7003",
-                "--typed-override",
-                "sorbet/typed_overrides.yml",
-              },
-              settings = {
-                -- Enable more aggressive type checking
-                ruby = {
-                  suggest = true,
-                  diagnostics = true,
+        require("mason-lspconfig").setup({
+          automatic_installation = false,
+          automatic_setup = false,
+          automatic_enable = false, -- Completely disable automatic enable
+        })
+
+        local servers = {
+          lua_ls = {
+            settings = {
+              Lua = {
+                diagnostics = {
+                  globals = { "vim" },
+                },
+                runtime = {
+                  version = "LuaJIT",
                 },
               },
-            })
-          end,
+            },
+          },
+          sorbet = {
+            cmd = {
+              "srb",
+              "tc",
+              "--typed",
+              "true",
+              "--enable-all-experimental-lsp-features",
+              "--lsp",
+              "--disable-watchman",
+              "--suppress-error-code",
+              "7003",
+              "--typed-override",
+              "sorbet/typed_overrides.yml",
+            },
+            settings = {
+              ruby = {
+                suggest = true,
+                diagnostics = true,
+              },
+            },
+          },
+        }
 
-          -- ['ruby_lsp'] = function ()
-          --   require'lspconfig'.ruby_lsp.setup {
-          --     on_attach = Simon_on_attach,
-          --     capabilities = vim.g.lsp_capabilities,
-          --     settings = servers[server_name],
-          --     filetypes = { "ruby" }
-          --   }
-          -- end,
+        -- Setup LSP servers
+        for server_name, server_config in pairs(servers) do
+          local config = vim.tbl_deep_extend("force", {
+            on_attach = Simon_on_attach,
+            capabilities = vim.g.lsp_capabilities,
+          }, server_config)
+          
+          require("lspconfig")[server_name].setup(config)
+        end
+
+        -- Setup default servers that don't need special config
+        local default_servers = {
+          "rust_analyzer",
+          "gopls",
+          "pyright",
+          "typescript-language-server",
+          "html",
+          "cssls",
+          "jsonls",
+          "yamlls",
+          "bashls",
+          "dockerls",
+          "terraformls"
+        }
+
+        for _, server_name in ipairs(default_servers) do
+          require("lspconfig")[server_name].setup({
+            on_attach = Simon_on_attach,
+            capabilities = vim.g.lsp_capabilities,
+          })
+        end
+
+        -- Create autocommand to attach LSP servers
+        vim.api.nvim_create_autocmd("FileType", {
+          callback = function(args)
+            local filetype = args.match
+            local clients = vim.lsp.get_active_clients()
+            local server_names = {}
+            
+            for _, client in ipairs(clients) do
+              table.insert(server_names, client.name)
+            end
+
+            -- Get the appropriate server for this filetype
+            local server = vim.lsp.get_active_clients({ bufnr = args.buf })[1]
+            if not server then
+              local ft_to_server = {
+                lua = "lua_ls",
+                rust = "rust_analyzer",
+                go = "gopls",
+                python = "pyright",
+                typescript = "typescript-language-server",
+                javascript = "typescript-language-server",
+                html = "html",
+                css = "cssls",
+                json = "jsonls",
+                yaml = "yamlls",
+                bash = "bashls",
+                dockerfile = "dockerls",
+                terraform = "terraformls",
+                ruby = "ruby_lsp",
+              }
+
+              local server_name = ft_to_server[filetype]
+              if server_name then
+                require("lspconfig")[server_name].setup({
+                  on_attach = Simon_on_attach,
+                  capabilities = vim.g.lsp_capabilities,
+                })
+              end
+            end
+          end,
         })
       end,
     },
